@@ -33,6 +33,10 @@ class MonacoEditor extends Field
 
     public bool | Closure $showFullScreenToggle = true;
 
+    public bool | Closure $fullScreen = false;
+
+    public null | string | Closure $entangleFullScreen = null;
+
     public string | Closure $theme = 'blackboard';
 
     protected string $view = 'filament-monaco-editor::filament-monaco-editor';
@@ -232,6 +236,20 @@ class MonacoEditor extends Field
         return $this;
     }
 
+    public function fullScreen(bool | Closure $condition = true): static
+    {
+        $this->fullScreen = $condition;
+
+        return $this;
+    }
+
+    public function entangleFullScreenProperty(string | Closure $condition = 'fullScreen'): static
+    {
+        $this->entangleFullScreen = $condition;
+
+        return $this;
+    }
+
     public function hideFullScreenButton()
     {
         $this->showFullScreenToggle = false;
@@ -313,5 +331,15 @@ class MonacoEditor extends Field
     public function getShowFullScreenToggle()
     {
         return (bool) $this->evaluate($this->showFullScreenToggle);
+    }
+
+    public function getEntangleFullScreen(): ?string
+    {
+        return  $this->evaluate($this->entangleFullScreen);
+    }
+
+    public function isFullScreen(): bool
+    {
+        return (bool) $this->evaluate($this->fullScreen);
     }
 }

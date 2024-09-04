@@ -1,9 +1,8 @@
 <x-dynamic-component :component="$getFieldWrapperView()" :field="$field" class="overflow-hidden">
-
     <div x-data="{
-        monacoContent: $wire.$entangle('{{ $getStatePath() }}'),
+        monacoContent: $wire.{{ $applyStateBindingModifiers("\$entangle('{$getStatePath()}')") }},
         previewContent: '',
-        fullScreenModeEnabled: false,
+        fullScreenModeEnabled: {{ $getEntangleFullScreen() !== null ? "\$wire.\$entangle('{$getEntangleFullScreen()}')" : "false" }},
         showPreview: false,
         monacoLanguage: '{{ $getLanguage() }}',
         monacoPlaceholder: {{ (int) $getShowPlaceholder() }},
@@ -82,8 +81,14 @@
             }
         });
 
+
+
         if(typeof _amdLoaderGlobal == 'undefined'){
             monacoEditorAddLoaderScriptToHead();
+        }
+
+        if ({{\Js::encode($isFullScreen())}}) {
+            toggleFullScreenMode()
         }
 
         monacoLoaderInterval = setInterval(() => {
