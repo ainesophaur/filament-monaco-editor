@@ -1,9 +1,13 @@
+@php
+$isReadOnly = $isReadOnly()
+ @endphp
 <x-dynamic-component :component="$getFieldWrapperView()" :field="$field" class="overflow-hidden">
     <div x-data="{
         monacoContent: $wire.{{ $applyStateBindingModifiers("\$entangle('{$getStatePath()}')") }},
         previewContent: '',
         fullScreenModeEnabled: {{ $getEntangleFullScreen() !== null ? "\$wire.\$entangle('{$getEntangleFullScreen()}')" : "false" }},
         showPreview: false,
+        readOnly: {{ \Js::encode($isReadOnly) }},
         monacoLanguage: '{{ $getLanguage() }}',
         monacoPlaceholder: {{ (int) $getShowPlaceholder() }},
         monacoPlaceholderText: '{{ $getPlaceholderText() }}',
@@ -100,7 +104,6 @@
                 window.MonacoEnvironment = { getWorkerUrl: () => proxy };
 
                 require(['vs/editor/editor.main'], () => {
-
                     monaco.editor.defineTheme('custom', {{ $editorTheme() }});
                     document.getElementById(monacoId).editor = monaco.editor.create($refs.monacoEditorElement, {
                         value: monacoContent,
@@ -108,7 +111,9 @@
                         fontSize: monacoFontSize,
                         lineNumbersMinChars: lineNumbersMinChars,
                         automaticLayout: automaticLayout,
-                        language: monacoLanguage
+                        language: monacoLanguage,
+                        readOnly: readOnly,
+                        domReadOnly: readOnly,
                     });
                     monacoEditor(document.getElementById(monacoId).editor);
                     document.getElementById(monacoId).addEventListener('monaco-editor-focused', (event) => {

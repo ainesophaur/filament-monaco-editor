@@ -4,9 +4,12 @@ namespace AbdelhamidErrahmouni\FilamentMonacoEditor;
 
 use Closure;
 use Filament\Forms\Components\Field;
+use Filament\Forms\Components\Concerns;
 
 class MonacoEditor extends Field
 {
+    use Concerns\CanBeReadOnly;
+
     public bool | Closure $showPlaceholder = true;
 
     public bool | Closure $showLoader = true;
